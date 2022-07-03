@@ -7,7 +7,7 @@ demo: https://lypso1.github.io/lypso-recipe/
 # Description
 
 ```
-Lypso recipe is a decentralized application that utilize that is built on the celo blockchain. It is a Dapp where users can
+Lypso's recipe is a decentralized application that is built on the celo blockchain. It is a Dapp where users can
 1. Login or signup and have their wallet connected to the Dapp
 2. Specify if they are users or members during login or sign up
 3. Members can upload as well as buy uploaded recipes
