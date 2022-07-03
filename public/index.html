@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap");
+
+      body {
+        min-height: 100vh;
+        margin: 0px;
+        background-color: #fff;
+        box-sizing: border-box;
+        color: #272727;
+        padding: 0px;
+        font-family: "Roboto";
+        font-size: 16px;
+        position: relative;
+      }
+      .notification {
+        padding: 10px 5%;
+        position: absolute;
+        top: 70px;
+        left: 0px;
+        width: calc(100vh - 70px);
+        height: calc(100vh - 100px);
+        background-color: #fff;
+      }
+      .balance {
+        justify-content: flex-start;
+        padding: 0px 5%;
+      }
+      .balance p {
+        padding: 10px 10px;
+        box-shadow: 0px 0px 5px #dddddd;
+      }
+      .balance p span {
+        color: green;
+        font-size: 1.2rem;
+      }
+      button {
+        background-color: green;
+        color: #fff;
+        border: none;
+        font-family: "Roboto";
+        cursor: pointer;
+        padding: 12px 20px;
+        text-transform: capitalize;
+        font-size: 1rem;
+      }
+
+      /* Navigation Styles */
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 30px;
+        padding: 0px 5%;
+        box-sizing: border-box;
+      }
+      nav .logo {
+        display: flex;
+        align-items: center;
+      }
+      .logo p span {
+        display: block;
+        font-size: 0.6rem;
+      }
+
+      .navigation ul {
+        padding: 0px;
+        margin: 0px;
+      }
+      .navigation li {
+        list-style-type: none;
+        display: inline-block;
+        margin: 0px 0px 0px 10px;
+      }
+      .navigation li a {
+        text-decoration: none;
+        color: #000;
+        margin: 10px 0px 10px 10px;
+        padding: 10px 18px;
+        transition: all 0.3s;
+      }
+      .navigation li:hover a {
+        background-color: green;
+        color: #fff;
+      }
+      /* ENDS HERE */
+
+      /* HEADER SECTION */
+      header {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        box-sizing: border-box;
+      }
+
+      header .header_content {
+        width: 500px;
+      }
+      .header_content h1 {
+        color: green;
+        text-transform: capitalize;
+        font-size: 3rem;
+        margin-top: 10px;
+        line-height: 1.3;
+      }
+      .header_content h1 span {
+        color: orange;
+      }
+      .header_content p {
+        line-height: 1.5;
+      }
+
+      .header_btn {
+        margin: 0px;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+      }
+      .header_btn button {
+        min-width: 100px;
+        justify-content: center;
+      }
+
+      /* LOGIN FORM */
+      .login_form,
+      .signup_form {
+        position: relative;
+        z-index: 2;
+        background-color: white;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+      }
+      .login_form h1,
+      .signup_form h1 {
+        width: 100%;
+        text-align: center;
+      }
+      .login_form form,
+      .signup_form form {
+        width: 400px;
+        padding: 10px 20px;
+      }
+      form div {
+        margin: 15px 0px;
+      }
+      form input,
+      form textarea,
+      form select {
+        width: 100%;
+        border-radius: 3px;
+        border: none;
+        border: thin solid #c5c5c5;
+        outline: none;
+        padding-left: 5px;
+        font-size: 0.9rem;
+        font-family: "Roboto";
+        height: 45px;
+        box-sizing: border-box;
+      }
+      form textarea {
+        height: 150px;
+      }
+      form button {
+        width: 100%;
+      }
+      /* BUY PROPERTY */
+      .recipes {
+        padding: 20px 5%;
+        margin: 0px;
+        box-sizing: border-box;
+        flex-wrap: wrap;
+        gap: 20px 40px;
+        margin-top: 5%;
+      }
+      .recipe {
+        width: 300px;
+        padding: 0px;
+        position: relative;
+        height: 360px;
+        box-shadow: 0px 0px 5px #dddddd;
+        overflow: hidden;
+      }
+      .recipe_img {
+        width: 100%;
+        height: 180px;
+        overflow: hidden;
+      }
+      .recipe_img img {
+        width: 100%;
+      }
+      .recipe_info {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+      }
+      .recipe_info h3 {
+        margin: 10px 0px;
+        font-size: 1.3rem;
+      }
+      .recipe_info p {
+        font-size: 1rem;
+        margin: 5px 0px;
+      }
+      .recipe_info p.sold {
+        color: green;
+        font-size: 1rem;
+      }
+      .recipe .icon {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        overflow: hidden;
+        border-radius: 50%;
+        top: 43%;
+        transform: translate(-50%);
+        right: -10px;
+      }
+      .icon img {
+        width: 100%;
+      }
+      .recipe .buy_recipe_btn {
+        box-sizing: border-box;
+        display: flex;
+        justify-content: space-between;
+      }
+      .buy_recipe_btn button {
+        width: 45%;
+      }
+      .buy_recipe_btn .delete_recipe {
+        background-color: orange;
+      }
+      /* ENDS HERE */
+
+      /* UPLOAD RECIPE */
+      .upload_recipe_container {
+        position: relative;
+        background-color: #fff;
+        justify-content: center;
+      }
+      .upload_recipe_container form {
+        box-shadow: 0px 0px 5px #ebebeb;
+        box-sizing: border-box;
+        width: 450px;
+        padding: 10px 20px;
+      }
+
+      form .recipe_btn {
+        margin-top: 40px;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+      }
+      .recipe_btn button {
+        min-width: 100px;
+      }
+      /* ENDS HERE */
+
+      /* TOGGLE APPEARANCE */
+      .hide {
+        display: none;
+      }
+      .show {
+        display: flex;
+      }
+    </style>
+    <title>Buy Recipe</title>
+  </head>
+  <body>
+    <div class="container">
+      <nav>
+        <div class="logo">
+          <p>Calypso's <span>Recipes</span></p>
+        </div>
+
+        <div class="navigation">
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#">Recipes</a></li>
+            <li><a href="#">About Us</a></li>
+          </ul>
+        </div>
+      </nav>
+
+      <header>
+        <section class="header_content">
+          <div>
+            <h1>
+              Cook delicious meals with <span>less stress and more joy</span>
+            </h1>
+            <p>
+              Explore our world, find the best recipes and meal plans for your
+              optimum health and budget at a click of a button.
+            </p>
+          </div>
+        </section>
+
+        <div class="header_btn">
+          <button class="login_btn show">Login</button>
+          <button class="signup_btn show">Sign up</button>
+          <button class="header_upload_recipe_btn hide">
+            Upload recipes
+          </button>
+          <button class="header_buy_recipe_btn hide">
+            Available Recipes
+          </button>
+        </div>
+      </header>
+
+      <!-- LOGIN PAGE -->
+      <div class="login_form hide">
+        <h1>Login</h1>
+        <form>
+          <div class="user_email">
+            <input
+              type="email"
+              class="uesr_email"
+              placeholder="Email address"
+              reqiured
+            />
+          </div>
+
+          <div class="user_password">
+            <input
+              type="password"
+              class="uesr_password"
+              placeholder="Password"
+              reqiured
+            />
+          </div>
+
+          <div class="user_status">
+            <select>
+              <option value="">Status</option>
+              <option value="user">User</option>
+              <option value="member">Member</option>
+            </select>
+          </div>
+
+          <div>
+            <button>Login</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- SIGNUP PAGE -->
+      <div class="signup_form hide">
+        <h1>Sign Up</h1>
+        <form>
+          <div class="user_email">
+            <input
+              type="email"
+              class="uesr_email"
+              placeholder="Email address"
+              reqiured
+            />
+          </div>
+
+          <div class="user_password">
+            <input
+              type="password"
+              class="uesr_password"
+              placeholder="Password"
+              reqiured
+            />
+          </div>
+
+          <div class="user_confirm_password">
+            <input
+              type="text"
+              class="uesr_password"
+              placeholder="Confirm Password"
+              reqiured
+            />
+          </div>
+
+          <div class="user_status">
+            <select>
+              <option value="">Status</option>
+              <option value="user">User</option>
+              <option value="member">Member</option>
+            </select>
+          </div>
+
+          <div>
+            <button>Sign Up</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="upload_recipe_container hide">
+        <form>
+          <h1>Add Recipe</h1>
+          <div class="recipe_name">
+            <input type="text" placeholder="Recipe name" />
+          </div>
+
+          <div class="recipe_author">
+            <input type="text" placeholder="Author" />
+          </div>
+
+          <div class="recipe_ingredients">
+            <textarea placeholder="Ingredients"></textarea>
+          </div>
+
+          <div class="recipe_procedure">
+            <textarea placeholder="Procedure"></textarea>
+          </div>
+
+          <div class="recipe_imgURL">
+            <input type="text" placeholder="Recipe image url" />
+          </div>
+
+          <div class="recipe_price">
+            <input type="number" placeholder="Price" />
+          </div>
+
+          <div class="recipe_btn">
+            <button class="upload">Upload recipe</button>
+            <button class="cancel">Cancel upload</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- BALANCE -->
+    <div class="balance hide"></div>
+
+    <!-- RECIPES -->
+    <div class="recipes hide"></div>
+
+    <!-- NOTIFICATION -->
+    <div class="notification hide">
+      <h1>Please wait...</h1>
+    </div>
+
+    <script src="https://unpkg.com/ethereum-blockies@0.1.1/blockies.min.js"></script>
+    <script src="../src/main.js"></script>
+  </body>
+</html>
