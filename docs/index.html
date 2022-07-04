@@ -147,6 +147,15 @@
         width: 100%;
         text-align: center;
       }
+      /* invalid password and email styles */
+      .invalid_email,
+      .invalid_password,
+      .invalid_confirm_password {
+        color: red;
+        font-size: 0.8rem;
+        margin: 5px 0px;
+      }
+      /* Ends here */
       .login_form form,
       .signup_form form {
         width: 400px;
@@ -329,6 +338,7 @@
               placeholder="Email address"
               reqiured
             />
+            <p class="invalid_email hide">invalid email</p>
           </div>
 
           <div class="user_password">
@@ -338,6 +348,9 @@
               placeholder="Password"
               reqiured
             />
+            <p class="invalid_password hide">
+              oops!!! password should be more than 6 characters
+            </p>
           </div>
 
           <div class="user_status">
@@ -365,6 +378,7 @@
               placeholder="Email address"
               reqiured
             />
+            <p class="invalid_email hide">invalid email</p>
           </div>
 
           <div class="user_password">
@@ -374,6 +388,9 @@
               placeholder="Password"
               reqiured
             />
+            <p class="invalid_password hide">
+              oops!!! password should be more than 6 characters
+            </p>
           </div>
 
           <div class="user_confirm_password">
@@ -383,6 +400,9 @@
               placeholder="Confirm Password"
               reqiured
             />
+            <p class="invalid_confirm_password hide">
+              oops!!! password not the same
+            </p>
           </div>
 
           <div class="user_status">
