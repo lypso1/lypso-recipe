@@ -48,15 +48,38 @@ headerSignupBtn.addEventListener("click", function () {
   header.classList.add("hide");
 });
 
+// EMAIL VERIFICATION USING REGULAR EXPRESSION
+function validateEmail(email) {
+  const mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // Regular expression to verify email
+  // Check if email is valid or not
+  if (email.match(mailformat)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+// VALID PASSWORD INPUT
+function validatePassword(password) {
+  if (password.length < 6) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 // LOGIN FORM
 loginBtn.addEventListener("click", async function (e) {
   e.preventDefault();
+  const invalidEmail = document.querySelector(".login_form .invalid_email"); //Invalid email variable
+  const invalidPassword = document.querySelector(
+    ".login_form .invalid_password"
+  ); //Invalid password variable
 
   const email = document.querySelector(".user_email input").value;
   const password = document.querySelector(".user_password input").value;
   const status = document.querySelector(".user_status select").value;
 
-  if (email && password && status !== "") {
+  if (validateEmail(email) && validatePassword(password) && status !== "") {
     loginForm.classList.replace("show", "hide");
     header.classList.remove("hide");
 
@@ -73,12 +96,22 @@ loginBtn.addEventListener("click", async function (e) {
     await userBalance();
     storedRecipes();
     notifyOff();
+  } else {
+    invalidEmail.classList.replace("hide", "show"); //Applying styles to indicate invalid email
+    invalidPassword.classList.replace("hide", "show"); //Applying styles to indicate invalid password
   }
 });
 
 // SIGNUP FORM
 signupBtn.addEventListener("click", async function (e) {
   e.preventDefault();
+  const invalidEmail = document.querySelector(".signup_form .invalid_email"); //Invalid email variable
+  const invalidPassword = document.querySelector(
+    ".signup_form .invalid_password"
+  ); //Invalid password variable
+  const invalidConfirmPassword = document.querySelector(
+    ".signup_form .invalid_confirm_password"
+  ); //Invalid password variable
 
   const email = document.querySelector(".signup_form .user_email input").value;
   const password = document.querySelector(".signup_form .user_password input")
@@ -89,7 +122,12 @@ signupBtn.addEventListener("click", async function (e) {
   const status = document.querySelector(".signup_form .user_status select")
     .value;
 
-  if (email && password && status !== "" && confirmPassword === password) {
+  if (
+    validateEmail(email) &&
+    validatePassword(password) &&
+    status !== "" &&
+    confirmPassword === password
+  ) {
     signupForm.classList.replace("show", "hide");
     header.classList.remove("hide");
 
@@ -106,6 +144,10 @@ signupBtn.addEventListener("click", async function (e) {
     await userBalance();
     storedRecipes();
     notifyOff();
+  } else {
+    invalidEmail.classList.replace("hide", "show"); //Applying styles to indicate invalid email
+    invalidPassword.classList.replace("hide", "show"); //Applying styles to indicate invalid password
+    invalidConfirmPassword.classList.replace("hide", "show"); //Applying styles to indicate invalid confirm password
   }
 });
 
