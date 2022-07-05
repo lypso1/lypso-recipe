@@ -119,12 +119,12 @@ contract Recipes {
       emit DeleteRecipe(_index);
     }
 
-    // returns true is recipe at @_index is delete, else false
+    // returns true if recipe at @_index is deleted, else false
     function deletedRecipe(uint _index) public view returns (bool) {
       return (recipes[_index].recipe_deleted);
     }
 
-    // returns the owner of contract
+    // returns address of contract owner
     function contractOwner() public view returns (address) {
       return (msg.sender);
     }
