@@ -8,17 +8,12 @@ const ERC20_DECIMALS = 18;
 const recipeContractAddress = "0x3AC5fB5c51F8b0D60A2446d36e56b672EB705e4e";
 const cUSDContractAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1";
 
-const headerLoginBtn = document.querySelector(".login_btn");
-const headerSignupBtn = document.querySelector(".signup_btn");
-const loginForm = document.querySelector(".login_form");
-const signupForm = document.querySelector(".signup_form");
+const headerLoginBtn = document.querySelector("#login_btn");
 const header = document.querySelector("header");
-const loginBtn = document.querySelector(".login_form button");
-const signupBtn = document.querySelector(".signup_form button");
 const headerUploadRecipeBtn = document.querySelector(
-  ".header_upload_recipe_btn"
+  "#header_upload_recipe_btn"
 );
-const headerBuyRecipeBtn = document.querySelector(".header_buy_recipe_btn");
+const headerBuyRecipeBtn = document.querySelector("#header_buy_recipe_btn");
 
 let kit;
 let contract;
@@ -28,95 +23,55 @@ let recipes = [];
 function notify(notice) {
   const notificationText = document.querySelector(".notification h1");
   const notificationContainer = document.querySelector(".notification");
-  notificationContainer.classList.replace("hide", "show");
+  notificationContainer.classList.remove("hide");
 
   notificationText.textContent = notice;
 }
 function notifyOff() {
   const notificationContainer = document.querySelector(".notification");
-  notificationContainer.classList.replace("show", "hide");
+  notificationContainer.classList.add("hide");
 }
 
 // HEADER BUTTONS
-headerLoginBtn.addEventListener("click", function () {
-  loginForm.classList.replace("hide", "show");
-  header.classList.add("hide");
-});
+headerLoginBtn.addEventListener("click", async function () {
+  notify("Loading your details, please wait");
 
-headerSignupBtn.addEventListener("click", function () {
-  signupForm.classList.replace("hide", "show");
-  header.classList.add("hide");
-});
-
-// LOGIN FORM
-loginBtn.addEventListener("click", async function (e) {
-  e.preventDefault();
-
-  const email = document.querySelector(".user_email input").value;
-  const password = document.querySelector(".user_password input").value;
-  const status = document.querySelector(".user_status select").value;
-
-  if (email && password && status !== "") {
-    loginForm.classList.replace("show", "hide");
-    header.classList.remove("hide");
-
-    if (status === "member") {
-      headerUploadRecipeBtn.classList.replace("hide", "show");
-    }
-
-    headerBuyRecipeBtn.classList.replace("hide", "show");
-    headerLoginBtn.classList.replace("show", "hide");
-    headerSignupBtn.classList.replace("show", "hide");
-
-    notify("Loading your details, please wait");
-    await connectToWallet();
-    await userBalance();
-    storedRecipes();
-    notifyOff();
-  }
-});
-
-// SIGNUP FORM
-signupBtn.addEventListener("click", async function (e) {
-  e.preventDefault();
-
-  const email = document.querySelector(".signup_form .user_email input").value;
-  const password = document.querySelector(".signup_form .user_password input")
-    .value;
-  const confirmPassword = document.querySelector(
-    ".signup_form .user_confirm_password input"
-  ).value;
-  const status = document.querySelector(".signup_form .user_status select")
-    .value;
-
-  if (email && password && status !== "" && confirmPassword === password) {
-    signupForm.classList.replace("show", "hide");
-    header.classList.remove("hide");
-
-    if (status === "member") {
-      headerUploadRecipeBtn.classList.replace("hide", "show");
-    }
-
-    headerBuyRecipeBtn.classList.replace("hide", "show");
-    headerLoginBtn.classList.replace("show", "hide");
-    headerSignupBtn.classList.replace("show", "hide");
-
-    notify("Signing up a new user");
-    await connectToWallet();
-    await userBalance();
-    storedRecipes();
-    notifyOff();
-  }
+  await connectToWallet();
+  headerUploadRecipeBtn.classList.remove("hide");
+  headerBuyRecipeBtn.classList.remove("hide");
+  document.querySelector("#recipes").classList.remove("hide");
+  notifyOff();
 });
 
 // UPLOAD RECIPE
 const uploadRecipeContainer = document.querySelector(
-  ".upload_recipe_container"
+  "#upload_recipe_container"
 );
 
 headerUploadRecipeBtn.addEventListener("click", function () {
   header.classList.add("hide");
-  uploadRecipeContainer.classList.replace("hide", "show");
+  recipeContainer.classList.add("hide");
+  document.querySelector(".balance").classList.add("hide");
+  uploadRecipeContainer.classList.add("d-flex");
+  uploadRecipeContainer.classList.remove("hide");
+
+});
+
+document.querySelector(".cancel").addEventListener("click", async function () {
+  document.querySelector(".recipe_name input").value = "";
+  document.querySelector(".recipe_author input").value = "";
+  document.querySelector(".recipe_ingredients textarea").value = "";
+  document.querySelector(".recipe_procedure textarea").value = "";
+  document.querySelector(".recipe_imgURL input").value = "";
+  document.querySelector(".recipe_price input").value = "";
+  uploadRecipeContainer.classList.remove("d-flex");
+  uploadRecipeContainer.classList.add("hide");
+  if(recipes.length  === 0){
+    await storedRecipes();
+    await userBalance();
+  }
+  recipeContainer.classList.remove("hide");
+  document.querySelector(".balance").classList.remove("hide");
 });
 
 // uploading the recipe
@@ -129,8 +84,9 @@ uploadRecipe.addEventListener("click", async function (e) {
   const recipeIngredients = document.querySelector(
     ".recipe_ingredients textarea"
   ).value;
-  const recipeProcedure = document.querySelector(".recipe_procedure textarea")
-    .value;
+  const recipeProcedure = document.querySelector(
+    ".recipe_procedure textarea"
+  ).value;
   const recipeImageURL = document.querySelector(".recipe_imgURL input").value;
   const recipePrice = document.querySelector(".recipe_price input").value;
 
@@ -149,9 +105,11 @@ uploadRecipe.addEventListener("click", async function (e) {
       content,
       recipeAuthor,
       recipeImageURL,
-      new BigNumber(recipePrice).shiftedBy(ERC20_DECIMALS).toString()
+      new BigNumber(recipePrice).shiftedBy(ERC20_DECIMALS).toString(),
     ];
 
+    uploadRecipeContainer.classList.remove("d-flex");
+    uploadRecipeContainer.classList.add("hide");
     notify(`Adding ${recipe[0]} recipe`);
 
     // connecting to the smart contract to access the ipload property function
@@ -162,21 +120,30 @@ uploadRecipe.addEventListener("click", async function (e) {
 
       notify(`Successfully added ${recipe[0]} recipe`);
 
-      const recipeContainer = document.querySelector(".recipes");
-
-      uploadRecipeContainer.classList.replace("show", "hide");
-      recipeContainer.classList.replace("hide", "show");
     } catch (error) {
       notify(`Oops, sorry but we couldn't upload your recipe`);
     }
   }
-  storedRecipes();
+  
+  await storedRecipes();
+  await userBalance();
   notifyOff();
+  recipeContainer.classList.remove("hide");
 });
+
+
+document.querySelector("#show-recipes").addEventListener("click", async function (){
+  header.classList.add("hide");
+  uploadRecipeContainer.classList.remove("d-flex");
+  uploadRecipeContainer.classList.add("hide");
+  await storedRecipes();
+  await userBalance();
+  recipeContainer.classList.remove("hide");
+})
 
 // VIEW UPLOADED RECIPES
 function uploadedRecipes() {
-  const recipeContainer = document.querySelector(".recipes");
+  const recipeContainer = document.querySelector("#recipes");
   recipeContainer.innerHTML = "";
 
   recipes.forEach((recipe) => {
@@ -191,14 +158,13 @@ function uploadedRecipes() {
 }
 
 // BUY UPLOADED RECIPE & DELETE UPLOADED RECIPE
-const recipeContainer = document.querySelector(".recipes");
+const recipeContainer = document.querySelector("#recipes");
 
 headerBuyRecipeBtn.addEventListener("click", async function () {
+  header.classList.add("hide");
   await storedRecipes();
   await userBalance();
-
-  header.classList.add("hide");
-  recipeContainer.classList.replace("hide", "show");
+  recipeContainer.classList.remove("hide");
 });
 
 // Buy Recipe
@@ -307,7 +273,7 @@ function identiconTemplate(address) {
     .create({
       seed: address,
       size: 8,
-      scale: 16
+      scale: 16,
     })
     .toDataURL();
 
@@ -339,7 +305,7 @@ async function storedRecipes() {
         image: recipeData[4],
         price: new BigNumber(recipeData[5]),
         sold: recipeData[6],
-        isDeleted
+        isDeleted,
       });
       reject((err) => {
         notify("Error: " + err);
@@ -363,7 +329,7 @@ async function userBalance() {
     <p>Celo balance: <span>${cUSDBalance} cUSD</span></p>
   `;
   balanceContainer.innerHTML = userCeloBalance;
-  balanceContainer.classList.replace("hide", "show");
+  balanceContainer.classList.remove("hide");
 }
 
 // RECIPE PURCHASE TRANSACTION APPROVAL
@@ -397,6 +363,7 @@ async function connectToWallet() {
 
       contract = new kit.web3.eth.Contract(recipeAbi, recipeContractAddress);
       notifyOff();
+      headerLoginBtn.classList.add("hide");
     } catch (error) {
       notify(error);
     }
