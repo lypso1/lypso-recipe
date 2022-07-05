@@ -18,6 +18,30 @@
         font-size: 16px;
         position: relative;
       }
+
+      form > * {
+        margin-top: 0.8rem;
+      }
+      form input,
+      form textarea,
+      form select {
+        width: 100%;
+        border-radius: 3px;
+        border: none;
+        border: thin solid #c5c5c5;
+        outline: none;
+        padding-left: 5px;
+        font-size: 0.9rem;
+        font-family: "Roboto";
+        height: 45px;
+        box-sizing: border-box;
+      }
+      form textarea {
+        height: 150px;
+      }
+      form button {
+        width: 100%;
+      }
       .notification {
         padding: 10px 5%;
         position: absolute;
@@ -131,52 +155,8 @@
         justify-content: center;
       }
 
-      /* LOGIN FORM */
-      .login_form,
-      .signup_form {
-        position: relative;
-        z-index: 2;
-        background-color: white;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
-      }
-      .login_form h1,
-      .signup_form h1 {
-        width: 100%;
-        text-align: center;
-      }
-      .login_form form,
-      .signup_form form {
-        width: 400px;
-        padding: 10px 20px;
-      }
-      form div {
-        margin: 15px 0px;
-      }
-      form input,
-      form textarea,
-      form select {
-        width: 100%;
-        border-radius: 3px;
-        border: none;
-        border: thin solid #c5c5c5;
-        outline: none;
-        padding-left: 5px;
-        font-size: 0.9rem;
-        font-family: "Roboto";
-        height: 45px;
-        box-sizing: border-box;
-      }
-      form textarea {
-        height: 150px;
-      }
-      form button {
-        width: 100%;
-      }
-      /* BUY PROPERTY */
-      .recipes {
+      /* BUY Recipes */
+      #recipes {
         padding: 20px 5%;
         margin: 0px;
         box-sizing: border-box;
@@ -187,6 +167,7 @@
       .recipe {
         width: 300px;
         padding: 0px;
+        margin-bottom: 1rem;
         position: relative;
         height: 360px;
         box-shadow: 0px 0px 5px #dddddd;
@@ -244,25 +225,29 @@
       /* ENDS HERE */
 
       /* UPLOAD RECIPE */
-      .upload_recipe_container {
+
+      .d-flex{
+        display: flex;
+      }
+      #upload_recipe_container {
         position: relative;
         background-color: #fff;
         justify-content: center;
       }
-      .upload_recipe_container form {
+      #upload_recipe_container form {
         box-shadow: 0px 0px 5px #ebebeb;
         box-sizing: border-box;
         width: 450px;
         padding: 10px 20px;
       }
 
-      form .recipe_btn {
+      #upload_recipe_container form .recipe_btn {
         margin-top: 40px;
         display: flex;
         justify-content: center;
         gap: 20px;
       }
-      .recipe_btn button {
+      #upload_recipe_container .recipe_btn button {
         min-width: 100px;
       }
       /* ENDS HERE */
@@ -275,7 +260,7 @@
         display: flex;
       }
     </style>
-    <title>Buy Recipe</title>
+    <title>Lypso Recipes</title>
   </head>
   <body>
     <div class="container">
@@ -287,8 +272,12 @@
         <div class="navigation">
           <ul>
             <li><a href="index.html">Home</a></li>
-            <li><a href="#">Recipes</a></li>
-            <li><a href="#">About Us</a></li>
+            <li><a href="#" id="show-recipes">Recipes</a></li>
+            <li>
+              <a id="header_upload_recipe_btn" class="hide" href="#">
+                Upload recipes
+              </a>
+            </li>
           </ul>
         </div>
       </nav>
@@ -307,99 +296,14 @@
         </section>
 
         <div class="header_btn">
-          <button class="login_btn show">Login</button>
-          <button class="signup_btn show">Sign up</button>
-          <button class="header_upload_recipe_btn hide">
-            Upload recipes
-          </button>
-          <button class="header_buy_recipe_btn hide">
+          <button id="login_btn" class="">Login</button>
+          <button id="header_buy_recipe_btn" class="hide">
             Available Recipes
           </button>
         </div>
       </header>
 
-      <!-- LOGIN PAGE -->
-      <div class="login_form hide">
-        <h1>Login</h1>
-        <form>
-          <div class="user_email">
-            <input
-              type="email"
-              class="uesr_email"
-              placeholder="Email address"
-              reqiured
-            />
-          </div>
-
-          <div class="user_password">
-            <input
-              type="password"
-              class="uesr_password"
-              placeholder="Password"
-              reqiured
-            />
-          </div>
-
-          <div class="user_status">
-            <select>
-              <option value="">Status</option>
-              <option value="user">User</option>
-              <option value="member">Member</option>
-            </select>
-          </div>
-
-          <div>
-            <button>Login</button>
-          </div>
-        </form>
-      </div>
-
-      <!-- SIGNUP PAGE -->
-      <div class="signup_form hide">
-        <h1>Sign Up</h1>
-        <form>
-          <div class="user_email">
-            <input
-              type="email"
-              class="uesr_email"
-              placeholder="Email address"
-              reqiured
-            />
-          </div>
-
-          <div class="user_password">
-            <input
-              type="password"
-              class="uesr_password"
-              placeholder="Password"
-              reqiured
-            />
-          </div>
-
-          <div class="user_confirm_password">
-            <input
-              type="text"
-              class="uesr_password"
-              placeholder="Confirm Password"
-              reqiured
-            />
-          </div>
-
-          <div class="user_status">
-            <select>
-              <option value="">Status</option>
-              <option value="user">User</option>
-              <option value="member">Member</option>
-            </select>
-          </div>
-
-          <div>
-            <button>Sign Up</button>
-          </div>
-        </form>
-      </div>
-
-      <div class="upload_recipe_container hide">
+      <div id="upload_recipe_container" class="hide">
         <form>
           <h1>Add Recipe</h1>
           <div class="recipe_name">
@@ -438,7 +342,7 @@
     <div class="balance hide"></div>
 
     <!-- RECIPES -->
-    <div class="recipes hide"></div>
+    <div id="recipes" class="hide"></div>
 
     <!-- NOTIFICATION -->
     <div class="notification hide">
