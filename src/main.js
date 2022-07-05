@@ -165,6 +165,7 @@ headerBuyRecipeBtn.addEventListener("click", async function () {
   await storedRecipes();
   await userBalance();
   recipeContainer.classList.remove("hide");
+  document.querySelector(".balance").classList.remove("hide");
 });
 
 // Buy Recipe
@@ -261,8 +262,8 @@ function recipeTemplate(recipe) {
     </div>
 
     <div id="${recipe.index}" class="buy_recipe_btn">
-      <button class="buy_recipe">Buy</button>
-      <button class="delete_recipe">Delete</button>
+      ${kit.defaultAccount === recipe.owner? "" : '<button class="buy_recipe">Buy</button>'}
+      ${kit.defaultAccount === recipe.owner? '<button class="delete_recipe">Delete</button>' : ""}
     </div>
   `;
 }

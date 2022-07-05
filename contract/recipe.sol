@@ -33,9 +33,11 @@ contract Recipes {
         0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1;
     address internal owner;
     uint256 editFee;
+    uint256 deletedCount;
 
     mapping(uint256 => Recipe) internal recipes;
     mapping(uint256 => bool) private banned;
+    mapping(uint256 => bool) public deleted;
     struct Recipe {
         address payable owner;
         string recipe_name;
@@ -62,11 +64,23 @@ contract Recipes {
         _;
     }
 
-
-    modifier checkBanned(uint _index){
-      require(!banned[_index], "Recipe is currently banned");
-      _;
+    modifier checkBanned(uint256 _index) {
+        require(!banned[_index], "Recipe is currently banned");
+        _;
     }
+
+    modifier checkDeleted(uint256 _index) {
+        require(!deleted[_index], "Recipe has been deleted");
+        _;
+    }
+
+    // EVENTS
+
+    event Uploaded(uint256 index, address indexed owner);
+    event Edited(uint256 index);
+    event DeletedRecipe(uint256 index);
+    event BanRecipe(uint256 index);
+    event UnbanRecipe(uint256 index);
 
     constructor() {
         owner = msg.sender;
@@ -86,7 +100,9 @@ contract Recipes {
         require(_recipe_price > 0, "Enter a valid price");
         require(bytes(_recipe_author).length > 0, "Invalid author");
         uint256 _recipe_sold = 0;
-        recipes[recipeLength] = Recipe(
+        uint256 id = recipeLength;
+        recipeLength++;
+        recipes[id] = Recipe(
             payable(msg.sender),
             _recipe_name,
             _recipe_contents,
@@ -95,9 +111,12 @@ contract Recipes {
             _recipe_price,
             _recipe_sold
         );
-        recipeLength++;
+        deleted[id] = false;
+
+        emit Uploaded(id, msg.sender);
     }
 
+    // allows edit of a recipe by the recipe owner after paying a fee
     function editRecipe(
         uint256 _index,
         string memory _recipe_name,
@@ -107,6 +126,7 @@ contract Recipes {
         public
         payable
         checkBanned(_index)
+        checkDeleted(_index)
         checkRecipeValues(_recipe_name, _recipe_contents, _recipe_imageURL)
     {
         require(msg.sender == recipes[_index].owner, "Unauthorized user");
@@ -122,19 +142,25 @@ contract Recipes {
         currentRecipe.recipe_name = _recipe_name;
         currentRecipe.recipe_contents = _recipe_contents;
         currentRecipe.recipe_imageURL = _recipe_imageURL;
+        emit Edited(_index);
     }
 
     function readRecipe(uint256 _index)
         public
         view
         checkBanned(_index)
-        returns (Recipe memory
-        )
+        checkDeleted(_index)
+        returns (Recipe memory)
     {
         return recipes[_index];
     }
 
-    function buyRecipe(uint256 _index) public payable checkBanned(_index) {
+    function buyRecipe(uint256 _index)
+        public
+        payable
+        checkBanned(_index)
+        checkDeleted(_index)
+    {
         require(
             msg.sender != recipes[_index].owner,
             "You can't buy your own recipe"
@@ -154,18 +180,65 @@ contract Recipes {
         return (recipeLength);
     }
 
-    function banRecipe(uint256 _index) public onlyOwner {
+    // deletes a recipe
+    // callable only by contract owner
+    function deleteRecipe(uint256 _index)
+        public
+        onlyOwner
+        checkDeleted(_index)
+    {
+        require(
+            banned[_index],
+            "Only recipes that have been banned can be deleted"
+        );
+        deleted[_index] = true;
+        deletedCount++;
+        delete recipes[_index];
+        emit DeletedRecipe(_index);
+    }
+
+    // bans a recipe
+    // callable only by contract owner
+    function banRecipe(uint256 _index) public onlyOwner checkDeleted(_index) {
         require(!banned[_index], "Recipe is already banned");
         banned[_index] = true;
+        emit BanRecipe(_index);
     }
 
-    function unBanRecipe(uint256 _index) public onlyOwner {
+    // unbans a recipe
+    // callable only by contract owner
+    function unBanRecipe(uint256 _index) public onlyOwner checkDeleted(_index) {
         require(banned[_index], "Recipe isn't banned");
         banned[_index] = false;
+        emit UnbanRecipe(_index);
     }
 
-    function isBanned(uint256 _index) public view returns (bool) {
+    // checks if a recipe is banned
+    function isBanned(uint256 _index)
+        public
+        view
+        checkDeleted(_index)
+        returns (bool)
+    {
         return (banned[_index]);
+    }
+
+    // checks if a recipe has been deleted
+    function isDeleted(uint256 _index) public view returns (bool) {
+        return deleted[_index];
+    }
+
+    // retrieves all deleted recipes Ids
+    function getDeleted() public view returns (uint256[] memory) {
+        uint256[] memory recipesDeleted = new uint256[](deletedCount);
+        uint256 index = 0;
+        for (uint256 i = 0; i < recipeLength; i++) {
+            if (isDeleted(i)) {
+                recipesDeleted[index] = i;
+                index++;
+            }
+        }
+        return recipesDeleted;
     }
 
     function contractOwner() public view returns (address) {
