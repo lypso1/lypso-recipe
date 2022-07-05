@@ -34,14 +34,19 @@ contract Recipes {
     }
 
     modifier onlyOwner {
-      require(msg.sender == owner);
+      require(msg.sender == owner, "Only owner of contract can perform this action");
       _;
     }
+
+    event createRecipe(uint256 recipeIndex, string recipeName);
+    event BuyRecipe(uint256 recipeIndex);
+    event DeleteRecipe(uint256 recipeIndex);
 
     constructor() {
       owner = msg.sender;
     }
 
+    // create a new recipe
     function uploadRecipe(
       string memory _recipe_name,
       string memory _recipe_contents,
@@ -62,10 +67,13 @@ contract Recipes {
         _recipe_price,
         _recipe_sold,
         _recipe_deleted
-      );
+      );    
+
+      emit createRecipe(recipeLength, _recipe_name);
       recipeLength ++;
     }
 
+    // return recipe at index @_index
     function readRecipe(uint _index) public view returns(
       address payable,
       string memory,
@@ -86,6 +94,7 @@ contract Recipes {
       );
     }
 
+    // buy recipe
     function buyRecipe(uint _index) public payable  {
         require(
           IERC20Token(cUsdTokenAddress).transferFrom(
@@ -96,20 +105,26 @@ contract Recipes {
           "Transfer failed."
         );
         recipes[_index].recipe_sold++;
+        emit BuyRecipe(_index);
     }
 
+    // get length of total recipes uploaded
     function getRecipeLength() public view returns (uint) {
       return (recipeLength);
     }
 
+    // delete recipe at index @_index
     function deleteRecipe(uint _index) public onlyOwner {
       recipes[_index].recipe_deleted = true;
+      emit DeleteRecipe(_index);
     }
 
+    // returns true is recipe at @_index is delete, else false
     function deletedRecipe(uint _index) public view returns (bool) {
       return (recipes[_index].recipe_deleted);
     }
-    
+
+    // returns the owner of contract
     function contractOwner() public view returns (address) {
       return (msg.sender);
     }

@@ -5,7 +5,7 @@ import erc20Abi from "../contract/erc20.abi.json";
 import recipeAbi from "../contract/recipe.abi.json";
 
 const ERC20_DECIMALS = 18;
-const recipeContractAddress = "0x3AC5fB5c51F8b0D60A2446d36e56b672EB705e4e";
+const recipeContractAddress = "0x16c6Ba790Cff74A568c8010470abe01c70621E2d";
 const cUSDContractAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1";
 
 const headerLoginBtn = document.querySelector(".login_btn");
@@ -22,6 +22,8 @@ const headerBuyRecipeBtn = document.querySelector(".header_buy_recipe_btn");
 
 let kit;
 let contract;
+let user;
+let contractOwner;
 let recipes = [];
 
 // NOTIFCATION
@@ -294,12 +296,33 @@ function recipeTemplate(recipe) {
       <p class="sold">Sold: ${recipe.sold}</p>
     </div>
 
-    <div id="${recipe.index}" class="buy_recipe_btn">
-      <button class="buy_recipe">Buy</button>
-      <button class="delete_recipe">Delete</button>
+    <div id="${recipe.index}" class="buy_recipe_btn">   
+    ${displayButtons(recipe)}        
     </div>
   `;
 }
+
+function displayButtons(recipe) {  
+ if (user === contractOwner) {
+  if (user === recipe.owner) {
+    return `
+      <button class="delete_recipe">Delete</button> 
+    `
+  } else {
+    return `
+      <button class="buy_recipe">Buy</button>
+      <button class="delete_recipe">Delete</button> 
+    `
+  }
+ } else {
+  if (user == recipe.owner) {
+    return null    
+  } else if (user === contractOwner) {
+    return `<button class="delete_recipe">Delete</button> `
+  } else return null;
+}
+}
+
 
 // IDENTICON TEMPLATE
 function identiconTemplate(address) {
@@ -355,6 +378,7 @@ async function storedRecipes() {
 // CELO BALANCE
 async function userBalance() {
   const balanceContainer = document.querySelector(".balance");
+  contractOwner = await contract.methods.contractOwner().call();
 
   const balance = await kit.getTotalBalance(kit.defaultAccount);
   const cUSDBalance = balance.cUSD.shiftedBy(-ERC20_DECIMALS).toFixed(2);
@@ -394,7 +418,7 @@ async function connectToWallet() {
       const accounts = await kit.web3.eth.getAccounts();
 
       kit.defaultAccount = accounts[0];
-
+      user = kit.defaultAccount;
       contract = new kit.web3.eth.Contract(recipeAbi, recipeContractAddress);
       notifyOff();
     } catch (error) {
