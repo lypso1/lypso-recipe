@@ -1,7 +1,11 @@
 # Lypso's Recipe
 
 ```
-demo: https://lypso1.github.io/lypso-recipe/
+```
+
+# Demo:
+```
+https://lypso1.github.io/lypso-recipe/
 
 ```
 # Description
