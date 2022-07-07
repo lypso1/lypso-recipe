@@ -9,12 +9,9 @@ const recipeContractAddress = "0x16c6Ba790Cff74A568c8010470abe01c70621E2d";
 const cUSDContractAddress = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1";
 
 const headerLoginBtn = document.querySelector(".login_btn");
-const headerSignupBtn = document.querySelector(".signup_btn");
 const loginForm = document.querySelector(".login_form");
-const signupForm = document.querySelector(".signup_form");
 const header = document.querySelector("header");
 const loginBtn = document.querySelector(".login_form button");
-const signupBtn = document.querySelector(".signup_form button");
 const headerUploadRecipeBtn = document.querySelector(
   ".header_upload_recipe_btn"
 );
@@ -45,20 +42,13 @@ headerLoginBtn.addEventListener("click", function () {
   header.classList.add("hide");
 });
 
-headerSignupBtn.addEventListener("click", function () {
-  signupForm.classList.replace("hide", "show");
-  header.classList.add("hide");
-});
-
 // LOGIN FORM
 loginBtn.addEventListener("click", async function (e) {
   e.preventDefault();
 
-  const email = document.querySelector(".user_email input").value;
-  const password = document.querySelector(".user_password input").value;
   const status = document.querySelector(".user_status select").value;
 
-  if (email && password && status !== "") {
+  if (status !== "") {
     loginForm.classList.replace("show", "hide");
     header.classList.remove("hide");
 
@@ -68,42 +58,8 @@ loginBtn.addEventListener("click", async function (e) {
 
     headerBuyRecipeBtn.classList.replace("hide", "show");
     headerLoginBtn.classList.replace("show", "hide");
-    headerSignupBtn.classList.replace("show", "hide");
 
     notify("Loading your details, please wait");
-    await connectToWallet();
-    await userBalance();
-    storedRecipes();
-    notifyOff();
-  }
-});
-
-// SIGNUP FORM
-signupBtn.addEventListener("click", async function (e) {
-  e.preventDefault();
-
-  const email = document.querySelector(".signup_form .user_email input").value;
-  const password = document.querySelector(".signup_form .user_password input")
-    .value;
-  const confirmPassword = document.querySelector(
-    ".signup_form .user_confirm_password input"
-  ).value;
-  const status = document.querySelector(".signup_form .user_status select")
-    .value;
-
-  if (email && password && status !== "" && confirmPassword === password) {
-    signupForm.classList.replace("show", "hide");
-    header.classList.remove("hide");
-
-    if (status === "member") {
-      headerUploadRecipeBtn.classList.replace("hide", "show");
-    }
-
-    headerBuyRecipeBtn.classList.replace("hide", "show");
-    headerLoginBtn.classList.replace("show", "hide");
-    headerSignupBtn.classList.replace("show", "hide");
-
-    notify("Signing up a new user");
     await connectToWallet();
     await userBalance();
     storedRecipes();
